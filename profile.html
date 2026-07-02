@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Profile | Dream Foundation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="images/logo.png">
+    <style>
+        :root {
+            --primary-blue: #1a73e8;
+            --light-blue: #e8f0fe;
+            --white: #ffffff;
+            --dark-text: #202124;
+            --gray-border: #dadce0;
+        }
+        
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Navigation */
+        .admin-nav {
+            width: 250px;
+            background: var(--primary-blue);
+            color: var(--white);
+            padding: 20px 0;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .admin-nav-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .admin-nav-links {
+            padding: 20px 0;
+            flex-grow: 1;
+        }
+        
+        .admin-nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--white);
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        
+        .admin-nav-link:hover, .admin-nav-link.active {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .admin-nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Admin Profile at Bottom */
+        .admin-profile-section {
+            padding: 20px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            margin-top: auto;
+        }
+        
+        .admin-profile-container {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        .admin-profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid var(--white);
+            margin-right: 10px;
+        }
+        
+        .admin-profile-dropdown {
+            position: absolute;
+            bottom: 50px;
+            left: 0;
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            width: 200px;
+            overflow: hidden;
+            display: none;
+            z-index: 100;
+        }
+        
+        .profile-dropdown-link {
+            display: block;
+            padding: 12px 20px;
+            color: var(--dark-text);
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        
+        .profile-dropdown-link:hover {
+            background: var(--light-blue);
+        }
+        
+        /* Main Content */
+        .admin-main {
+            flex: 1;
+            background: var(--light-blue);
+            padding: 20px;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: var(--white);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        /* Profile Page Specific Styles */
+        .profile-page {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .profile-image-container {
+            position: relative;
+            margin-right: 30px;
+        }
+        
+        .profile-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary-blue);
+        }
+        
+        .change-image-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .profile-info {
+            flex: 1;
+        }
+        
+        .profile-name {
+            font-size: 24px;
+            margin: 0 0 5px 0;
+            color: var(--dark-text);
+        }
+        
+        .profile-email {
+            color: #666;
+            margin: 0 0 15px 0;
+        }
+        
+        .profile-form {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--dark-text);
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--gray-border);
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-blue);
+            outline: none;
+        }
+        
+        .password-toggle {
+            position: relative;
+        }
+        
+        .password-toggle-icon {
+            position: absolute;
+            right: 15px;
+            top: 42px;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--gray-border);
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: #0d5bba;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--dark-text);
+            border: 1px solid var(--gray-border);
+        }
+        
+        .btn-secondary:hover {
+            background: #f5f5f5;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .success-message {
+            color: #28a745;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        /* Image Upload Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: var(--white);
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--gray-border);
+        }
+        
+        .modal-title {
+            margin: 0;
+            color: var(--dark-text);
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .image-preview-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .image-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .file-input-label {
+            display: block;
+            padding: 12px;
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            text-align: center;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            transition: background 0.3s;
+        }
+        
+        .file-input-label:hover {
+            background: #d2e3fc;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Navigation -->
+        <nav class="admin-nav">
+            <div class="admin-nav-header">
+                <h2>Admin Panel</h2>
+            </div>
+            
+            <div class="admin-nav-links">
+                <a href="admin-dashboard.html" class="admin-nav-link" data-page="home">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a href="events.html" class="admin-nav-link" data-page="events">
+                    <i class="fas fa-calendar-alt"></i> Events
+                </a>
+                <a href="donations.html" class="admin-nav-link" data-page="donations">
+                    <i class="fas fa-donate"></i> Donations
+                </a>
+                <a href="users.html" class="admin-nav-link" data-page="users">
+                    <i class="fas fa-users"></i> Users
+                </a>
+            </div>
+            
+            <!-- Admin Profile Section -->
+            <div class="admin-profile-section">
+                <div class="admin-profile-container">
+                    <img src="images/admin-avatar.png" alt="Admin" class="admin-profile-img" id="nav-profile-img">
+                    <span id="admin-name">Admin Name</span>
+                    <div class="admin-profile-dropdown">
+                        <a href="profile.html" class="profile-dropdown-link active">
+                            <i class="fas fa-user"></i> Profile
+                        </a>
+                        <a href="#" id="logout-btn" class="profile-dropdown-link">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <header class="admin-header">
+                <h2>My Profile</h2>
+            </header>
+
+            <div class="profile-page">
+                <div class="profile-header">
+                    <div class="profile-image-container">
+                        <img src="images/admin-avatar.png" alt="Profile" class="profile-image" id="profile-image">
+                        <button class="change-image-btn" id="change-image-btn">
+                            <i class="fas fa-camera"></i>
+                        </button>
+                    </div>
+                    <div class="profile-info">
+                        <h1 class="profile-name" id="profile-name">Loading...</h1>
+                        <p class="profile-email" id="profile-email">Loading...</p>
+                    </div>
+                </div>
+
+                <form class="profile-form" id="profile-form">
+                    <input type="hidden" id="admin-id">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name" class="form-label">First Name</label>
+                            <input type="text" id="name" name="name" class="form-control">
+                            <div class="error-message" id="name-error"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="surname" class="form-label">Last Name</label>
+                            <input type="text" id="surname" name="surname" class="form-control">
+                            <div class="error-message" id="surname-error"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" id="email" name="email" class="form-control">
+                        <div class="error-message" id="email-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <p style="margin-top: 0; color: #666;">Leave blank to keep current password</p>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group password-toggle">
+                            <label for="current-password" class="form-label">Current Password</label>
+                            <input type="password" id="current-password" name="currentPassword" class="form-control">
+                            <i class="fas fa-eye password-toggle-icon" data-target="current-password"></i>
+                            <div class="error-message" id="current-password-error"></div>
+                        </div>
+                        <div class="form-group password-toggle">
+                            <label for="new-password" class="form-label">New Password</label>
+                            <input type="password" id="new-password" name="newPassword" class="form-control">
+                            <i class="fas fa-eye password-toggle-icon" data-target="new-password"></i>
+                            <div class="error-message" id="new-password-error"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancel-btn">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="save-btn">Save Changes</button>
+                    </div>
+                    
+                    <div class="success-message" id="success-message"></div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- Image Upload Modal -->
+    <div class="modal" id="image-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Change Profile Image</h3>
+                <button class="close-modal" id="close-modal">&times;</button>
+            </div>
+            
+            <label class="file-input-label" for="image-upload">
+                <i class="fas fa-upload"></i> Choose an Image
+                <input type="file" id="image-upload" class="file-input" accept="image/*">
+            </label>
+            
+            <div class="image-preview-container">
+                <img id="image-preview" class="image-preview" alt="Preview">
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="cancel-upload">Cancel</button>
+                <button class="btn btn-primary" id="save-image" disabled>Save Image</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if admin is logged in
+            const adminEmail = sessionStorage.getItem('adminEmail');
+            if (!adminEmail) {
+                window.location.href = 'admin-login.html';
+                return;
+            }
+
+            // DOM Elements
+            const navProfileImg = document.getElementById('nav-profile-img');
+            const adminNameElement = document.getElementById('admin-name');
+            const profileImage = document.getElementById('profile-image');
+            const profileName = document.getElementById('profile-name');
+            const profileEmail = document.getElementById('profile-email');
+            const profileForm = document.getElementById('profile-form');
+            const adminIdInput = document.getElementById('admin-id');
+            const nameInput = document.getElementById('name');
+            const surnameInput = document.getElementById('surname');
+            const emailInput = document.getElementById('email');
+            const currentPasswordInput = document.getElementById('current-password');
+            const newPasswordInput = document.getElementById('new-password');
+            const saveBtn = document.getElementById('save-btn');
+            const cancelBtn = document.getElementById('cancel-btn');
+            const successMessage = document.getElementById('success-message');
+            
+            // Image upload modal elements
+            const changeImageBtn = document.getElementById('change-image-btn');
+            const imageModal = document.getElementById('image-modal');
+            const closeModalBtn = document.getElementById('close-modal');
+            const cancelUploadBtn = document.getElementById('cancel-upload');
+            const saveImageBtn = document.getElementById('save-image');
+            const imageUpload = document.getElementById('image-upload');
+            const imagePreview = document.getElementById('image-preview');
+            
+            // Password toggle functionality
+            document.querySelectorAll('.password-toggle-icon').forEach(icon => {
+                icon.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const input = document.getElementById(targetId);
+                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                    input.setAttribute('type', type);
+                    this.classList.toggle('fa-eye');
+                    this.classList.toggle('fa-eye-slash');
+                });
+            });
+            
+            // Load admin profile data
+          async function loadProfileData() {
+    try {
+        const adminId = sessionStorage.getItem('adminId');
+        if (!adminId) {
+            throw new Error('No admin ID found in session');
+        }
+
+        const response = await fetch(`http://127.0.0.1:3000/api/admin/${adminId}`, {
+            credentials: 'include'
+        });
+        
+        if (!response.ok) {
+            if (response.status >= 400 && response.status < 500) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Client error fetching profile data');
+            } else {
+                throw new Error('Server error fetching profile data');
+            }
+        }
+        
+        const data = await response.json();
+        
+        if (data.success && data.admin) {
+            // Update form fields
+            adminIdInput.value = data.admin._id;
+            nameInput.value = data.admin.name || '';
+            surnameInput.value = data.admin.surname || '';
+            emailInput.value = data.admin.email;
+            
+            // Update profile display
+            profileName.textContent = `${data.admin.name || ''} ${data.admin.surname || ''}`.trim() || 'Admin';
+            profileEmail.textContent = data.admin.email;
+            adminNameElement.textContent = `${data.admin.name || ''} ${data.admin.surname || ''}`.trim() || 'Admin';
+            
+            // Update profile images
+            if (data.admin.image) {
+                profileImage.src = data.admin.image;
+                navProfileImg.src = data.admin.image;
+            }
+        } else {
+            throw new Error(data.message || 'Failed to load profile data');
+        }
+    } catch (error) {
+        console.error('Error loading profile data:', error);
+        const errorContainer = document.createElement('div');
+        errorContainer.className = 'error-message';
+        errorContainer.style.display = 'block';
+        errorContainer.style.margin = '20px 0';
+        errorContainer.style.padding = '10px';
+        errorContainer.style.backgroundColor = '#ffebee';
+        errorContainer.style.borderRadius = '4px';
+        errorContainer.textContent = `Error loading profile: ${error.message}`;
+        
+        const mainContent = document.querySelector('.admin-main');
+        if (mainContent) {
+            mainContent.insertBefore(errorContainer, mainContent.firstChild);
+        }
+    }
+}
+            
+            // Initialize the page
+            loadProfileData();
+            
+            // Form submission
+            profileForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Reset error messages
+                document.querySelectorAll('.error-message').forEach(el => {
+                    el.style.display = 'none';
+                });
+                successMessage.style.display = 'none';
+                
+                // Validate form
+                let isValid = true;
+                
+                if (!nameInput.value.trim()) {
+                    document.getElementById('name-error').textContent = 'First name is required';
+                    document.getElementById('name-error').style.display = 'block';
+                    isValid = false;
+                }
+                
+                if (!surnameInput.value.trim()) {
+                    document.getElementById('surname-error').textContent = 'Last name is required';
+                    document.getElementById('surname-error').style.display = 'block';
+                    isValid = false;
+                }
+                
+                if (!emailInput.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value)) {
+                    document.getElementById('email-error').textContent = 'Valid email is required';
+                    document.getElementById('email-error').style.display = 'block';
+                    isValid = false;
+                }
+                
+                // Password validation if new password is provided
+                if (newPasswordInput.value) {
+                    if (!currentPasswordInput.value) {
+                        document.getElementById('current-password-error').textContent = 'Current password is required to change password';
+                        document.getElementById('current-password-error').style.display = 'block';
+                        isValid = false;
+                    }
+                    
+                    if (newPasswordInput.value.length < 8) {
+                        document.getElementById('new-password-error').textContent = 'Password must be at least 8 characters';
+                        document.getElementById('new-password-error').style.display = 'block';
+                        isValid = false;
+                    }
+                }
+                
+                if (!isValid) return;
+                
+                // Prepare update data
+                const updateData = {
+                    _id: adminIdInput.value,
+                    name: nameInput.value.trim(),
+                    surname: surnameInput.value.trim(),
+                    email: emailInput.value.trim(),
+                    originalEmail: adminEmail
+                };
+                
+                if (newPasswordInput.value) {
+                    updateData.currentPassword = currentPasswordInput.value;
+                    updateData.newPassword = newPasswordInput.value;
+                }
+                
+                // Disable save button during request
+                saveBtn.disabled = true;
+                saveBtn.textContent = 'Saving...';
+                
+                try {
+                    const response = await fetch('http://127.0.0.1:3000/api/admin/profile', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(updateData),
+                        credentials: 'include'
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (!response.ok) {
+                        throw new Error(data.message || 'Failed to update profile');
+                    }
+                    
+                    if (data.success) {
+                        // Update session storage if email changed
+                        if (data.profile.email !== adminEmail) {
+                            sessionStorage.setItem('adminEmail', data.profile.email);
+                        }
+                        
+                        // Update displayed name
+                        adminNameElement.textContent = `${data.profile.name || ''} ${data.profile.surname || ''}`.trim() || 'Admin';
+                        profileName.textContent = `${data.profile.name || ''} ${data.profile.surname || ''}`.trim() || 'Admin';
+                        
+                        // Show success message
+                        successMessage.textContent = 'Profile updated successfully!';
+                        successMessage.style.display = 'block';
+                        
+                        // Hide success message after 3 seconds
+                        setTimeout(() => {
+                            successMessage.style.display = 'none';
+                        }, 3000);
+                    } else {
+                        throw new Error(data.message || 'Failed to update profile');
+                    }
+                } catch (error) {
+                    console.error('Error updating profile:', error);
+                    
+                    // Show appropriate error message
+                    if (error.message.includes('Current password is incorrect')) {
+                        document.getElementById('current-password-error').textContent = error.message;
+                        document.getElementById('current-password-error').style.display = 'block';
+                    } else if (error.message.includes('Email already in use')) {
+                        document.getElementById('email-error').textContent = error.message;
+                        document.getElementById('email-error').style.display = 'block';
+                    } else {
+                        alert(error.message || 'Failed to update profile. Please try again.');
+                    }
+                } finally {
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = 'Save Changes';
+                }
+            });
+            
+            // Cancel button resets form
+            cancelBtn.addEventListener('click', function() {
+                loadProfileData();
+                currentPasswordInput.value = '';
+                newPasswordInput.value = '';
+            });
+            
+            // Image upload functionality
+            changeImageBtn.addEventListener('click', function() {
+                imageModal.style.display = 'block';
+            });
+            
+            closeModalBtn.addEventListener('click', function() {
+                imageModal.style.display = 'none';
+                resetImageUpload();
+            });
+            
+            cancelUploadBtn.addEventListener('click', function() {
+                imageModal.style.display = 'none';
+                resetImageUpload();
+            });
+            
+            imageUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    if (!file.type.match('image.*')) {
+                        alert('Please select an image file');
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        imagePreview.src = event.target.result;
+                        imagePreview.style.display = 'block';
+                        saveImageBtn.disabled = false;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+          saveImageBtn.addEventListener('click', async function() {
+    if (!imageUpload.files[0]) return;
+    
+    const formData = new FormData();
+    formData.append('_id', adminIdInput.value);
+    formData.append('image', imageUpload.files[0]);
+    
+    saveImageBtn.disabled = true;
+    saveImageBtn.textContent = 'Saving...';
+    
+    try {
+        const response = await fetch('http://127.0.0.1:3000/api/admin/profile/image', {
+            method: 'POST',
+            body: formData,
+            credentials: 'include'
+        });
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to update profile image');
+        }
+
+        const data = await response.json();
+        
+        if (data.success) {
+            // Update profile images
+            profileImage.src = data.image;
+            navProfileImg.src = data.image;
+            
+            // Close modal
+            imageModal.style.display = 'none';
+            resetImageUpload();
+            
+            // Show success message
+            successMessage.textContent = 'Profile image updated successfully!';
+            successMessage.style.display = 'block';
+            
+            // Hide success message after 3 seconds
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 3000);
+        } else {
+            throw new Error(data.message || 'Failed to update profile image');
+        }
+    } catch (error) {
+        console.error('Error updating profile image:', error);
+        
+        // Show error in modal
+        const errorElement = document.createElement('div');
+        errorElement.className = 'error-message';
+        errorElement.style.display = 'block';
+        errorElement.style.margin = '10px 0';
+        errorElement.textContent = error.message;
+        
+        // Remove any existing error messages
+        const existingError = document.querySelector('.modal-content .error-message');
+        if (existingError) {
+            existingError.remove();
+        }
+        
+        // Insert new error message
+        const modalContent = document.querySelector('.modal-content');
+        modalContent.insertBefore(errorElement, modalContent.querySelector('.modal-actions'));
+    } finally {
+        saveImageBtn.disabled = false;
+        saveImageBtn.textContent = 'Save Image';
+    }
+});
+            
+            function resetImageUpload() {
+                imageUpload.value = '';
+                imagePreview.src = '';
+                imagePreview.style.display = 'none';
+                saveImageBtn.disabled = true;
+            }
+            
+            // Logout functionality
+            document.getElementById('logout-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                sessionStorage.removeItem('adminLoggedIn');
+                sessionStorage.removeItem('adminEmail');
+                sessionStorage.removeItem('adminName');
+                window.location.href = 'admin-login.html';
+            });
+            
+            // Profile dropdown functionality
+            const profileContainer = document.querySelector('.admin-profile-container');
+            const profileDropdown = document.querySelector('.admin-profile-dropdown');
+            
+            profileContainer.addEventListener('click', function(e) {
+                if (e.target.classList.contains('admin-profile-img') || 
+                    e.target.id === 'admin-name') {
+                    profileDropdown.style.display = 
+                        profileDropdown.style.display === 'block' ? 'none' : 'block';
+                }
+            });
+            
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.admin-profile-container')) {
+                    profileDropdown.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

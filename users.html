@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users | Dream Foundation Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="images/logo.png">
+    <style>
+        :root {
+            --primary-blue: #1a73e8;
+            --light-blue: #e8f0fe;
+            --white: #ffffff;
+            --dark-text: #202124;
+            --gray-border: #dadce0;
+        }
+        
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Navigation */
+        .admin-nav {
+            width: 250px;
+            background: var(--primary-blue);
+            color: var(--white);
+            padding: 20px 0;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .admin-nav-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .admin-nav-links {
+            padding: 20px 0;
+            flex-grow: 1;
+        }
+        
+        .admin-nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--white);
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        
+        .admin-nav-link:hover, .admin-nav-link.active {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .admin-nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Admin Profile at Bottom */
+        .admin-profile-section {
+            padding: 20px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            margin-top: auto;
+        }
+        
+        .admin-profile-container {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        .admin-profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid var(--white);
+            margin-right: 10px;
+        }
+        
+        .admin-profile-dropdown {
+            position: absolute;
+            bottom: 50px;
+            left: 0;
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            width: 200px;
+            overflow: hidden;
+            display: none;
+            z-index: 100;
+        }
+        
+        .profile-dropdown-link {
+            display: block;
+            padding: 12px 20px;
+            color: var(--dark-text);
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        
+        .profile-dropdown-link:hover {
+            background: var(--light-blue);
+        }
+        
+        /* Main Content */
+        .admin-main {
+            flex: 1;
+            background: var(--light-blue);
+            padding: 20px;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: var(--white);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        /* Users Management Specific Styles */
+        .users-stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            margin-top: 50px;
+        }
+        
+        .stat-card {
+            flex: 1;
+            background: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .stat-title {
+            color: var(--primary-blue);
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--dark-text);
+        }
+        
+        .stat-description {
+            font-size: 14px;
+            color: #5f6368;
+            margin-top: 5px;
+        }
+        
+        .users-management-container {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        
+        .users-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .users-title {
+            color: var(--primary-blue);
+            font-size: 20px;
+            margin: 0;
+        }
+        
+        .add-admin-btn {
+            background: var(--primary-blue);
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .users-table th {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 500;
+        }
+        
+        .users-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--gray-border);
+            color: var(--dark-text);
+        }
+        
+        .users-table tr:hover {
+            background: rgba(26, 115, 232, 0.05);
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--light-blue);
+        }
+        
+        .user-role {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .role-admin {
+            background: #e6f4ea;
+            color: #137333;
+        }
+        
+        .role-superadmin {
+            background: #e8f0fe;
+            color: #1a73e8;
+        }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--primary-blue);
+            cursor: pointer;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+        
+        .delete-btn {
+            color: #d93025;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            color: var(--primary-blue);
+            font-size: 20px;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--dark-text);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--dark-text);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--gray-border);
+            border-radius: 4px;
+        }
+        
+        .form-submit {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        /* Footer - Matching events page */
+        .admin-footer {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            text-align: center;
+            color: var(--dark-text);
+            font-size: 14px;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .footer-link {
+            color: var(--primary-blue);
+            text-decoration: none;
+        }
+        
+        .footer-copyright {
+            color: #5f6368;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Navigation -->
+        <nav class="admin-nav">
+            <div class="admin-nav-header">
+                <h2>Admin Panel</h2>
+            </div>
+            
+            <div class="admin-nav-links">
+                <a href="admin-dashboard.html" class="admin-nav-link">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a href="events.html" class="admin-nav-link">
+                    <i class="fas fa-calendar-alt"></i> Events
+                </a>
+                <a href="donations.html" class="admin-nav-link">
+                    <i class="fas fa-donate"></i> Donations
+                </a>
+                <a href="users.html" class="admin-nav-link active">
+                    <i class="fas fa-users"></i> Users
+                </a>
+            </div>
+            
+            <!-- Admin Profile Section -->
+            <div class="admin-profile-section">
+                <div class="admin-profile-container">
+                    <img src="images/admin-avatar.png" alt="Admin" class="admin-profile-img">
+                    <span id="admin-name">Admin Name</span>
+                    <div class="admin-profile-dropdown">
+                        <a href="profile.html" class="profile-dropdown-link">
+                            <i class="fas fa-user"></i> Profile
+                        </a>
+                        <a href="#" id="logout-btn" class="profile-dropdown-link">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <header class="admin-header">
+                <h2>User Management</h2>
+            </header>
+
+            <!-- User Statistics -->
+            <div class="users-stats">
+                <div class="stat-card">
+                    <div class="stat-title">Total Users</div>
+                    <div class="stat-value" id="total-users">0</div>
+                    <div class="stat-description">All registered users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Active Admins</div>
+                    <div class="stat-value" id="active-admins">0</div>
+                    <div class="stat-description">Administrators with access</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">New This Month</div>
+                    <div class="stat-value" id="new-users">0</div>
+                    <div class="stat-description">Users registered recently</div>
+                </div>
+            </div>
+
+            <!-- Admin Management -->
+            <div class="users-management-container">
+                <div class="users-header">
+                    <h3 class="users-title">Administrators</h3>
+                    <button id="addAdminBtn" class="add-admin-btn">
+                        <i class="fas fa-plus"></i> Add Admin
+                    </button>
+                </div>
+                
+                <table class="users-table" id="adminsTable">
+                    <thead>
+                        <tr>
+                            <th>Profile</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Last Active</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminsList">
+                        <!-- Admins will be loaded here dynamically -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Footer - Matching events page -->
+            <footer class="admin-footer">
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                    <a href="#" class="footer-link">Terms of Service</a>
+                    <a href="contact.html" class="footer-link">Contact Us</a>
+                </div>
+                <div class="footer-copyright">
+                    &copy; 2023 Dream Foundation. All Rights Reserved.
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Add Admin Modal -->
+    <div id="adminModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Add New Administrator</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="adminForm">
+                <div class="form-group">
+                    <label class="form-label" for="adminName">Full Name</label>
+                    <input type="text" id="adminName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="adminEmail">Email Address</label>
+                    <input type="email" id="adminEmail" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="adminPassword">Password</label>
+                    <input type="password" id="adminPassword" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="adminRole">Role</label>
+                    <select id="adminRole" class="form-control" required>
+                        <option value="admin">Administrator</option>
+                        <option value="superadmin">Super Administrator</option>
+                    </select>
+                </div>
+                <button type="submit" class="form-submit">Save Administrator</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if admin is logged in
+            if (!sessionStorage.getItem('adminLoggedIn')) {
+                window.location.href = 'admin-login.html';
+                return;
+            }
+
+            // DOM Elements
+            const adminName = document.getElementById('admin-name');
+            const addAdminBtn = document.getElementById('addAdminBtn');
+            const adminModal = document.getElementById('adminModal');
+            const closeModal = document.querySelector('.close-modal');
+            const adminForm = document.getElementById('adminForm');
+            const adminsList = document.getElementById('adminsList');
+            const totalUsers = document.getElementById('total-users');
+            const activeAdmins = document.getElementById('active-admins');
+            const newUsers = document.getElementById('new-users');
+
+            // Load admin name
+            const storedName = sessionStorage.getItem('adminName');
+            if (storedName) {
+                adminName.textContent = storedName;
+            }
+
+            // Event Handlers
+            addAdminBtn.addEventListener('click', openAddAdminModal);
+            closeModal.addEventListener('click', closeAdminModal);
+            adminForm.addEventListener('submit', handleAdminSubmit);
+
+            // Close modal when clicking outside
+            adminModal.addEventListener('click', function(e) {
+                if (e.target === adminModal) {
+                    closeAdminModal();
+                }
+            });
+
+            // Initial load
+            loadUserStats();
+            loadAdmins();
+
+            // Functions
+            function openAddAdminModal() {
+                adminForm.reset();
+                document.getElementById('modalTitle').textContent = 'Add New Administrator';
+                adminModal.style.display = 'flex';
+            }
+
+            function closeAdminModal() {
+                adminModal.style.display = 'none';
+            }
+
+            async function handleAdminSubmit(e) {
+                e.preventDefault();
+                
+                const adminData = {
+                    name: document.getElementById('adminName').value,
+                    email: document.getElementById('adminEmail').value,
+                    password: document.getElementById('adminPassword').value,
+                    role: document.getElementById('adminRole').value,
+                    createdBy: sessionStorage.getItem('adminEmail')
+                };
+
+                try {
+                    const response = await fetch('http://localhost:3000/api/admin/create', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(adminData)
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        closeAdminModal();
+                        loadAdmins();
+                        loadUserStats();
+                    } else {
+                        alert(result.message || 'Failed to add admin');
+                    }
+                } catch (error) {
+                    console.error('Error adding admin:', error);
+                    alert('Failed to add admin');
+                }
+            }
+
+            async function loadUserStats() {
+                try {
+                    const response = await fetch('http://localhost:3000/api/users/stats');
+                    const result = await response.json();
+
+                    if (result.success) {
+                        totalUsers.textContent = result.stats.totalUsers;
+                        activeAdmins.textContent = result.stats.activeAdmins;
+                        newUsers.textContent = result.stats.newUsers;
+                    } else {
+                        console.error('Failed to load user stats:', result.message);
+                    }
+                } catch (error) {
+                    console.error('Error loading user stats:', error);
+                }
+            }
+
+            async function loadAdmins() {
+                try {
+                    const response = await fetch('http://localhost:3000/api/admin/list');
+                    const result = await response.json();
+
+                    if (result.success) {
+                        renderAdmins(result.admins);
+                    } else {
+                        console.error('Failed to load admins:', result.message);
+                    }
+                } catch (error) {
+                    console.error('Error loading admins:', error);
+                }
+            }
+
+            function renderAdmins(admins) {
+                adminsList.innerHTML = '';
+
+                if (admins.length === 0) {
+                    adminsList.innerHTML = '<tr><td colspan="6">No administrators found</td></tr>';
+                    return;
+                }
+
+                admins.forEach(admin => {
+                    const row = document.createElement('tr');
+                    
+                    const lastActive = admin.lastActive 
+                        ? new Date(admin.lastActive).toLocaleDateString() 
+                        : 'Never';
+                    
+                    row.innerHTML = `
+                        <td>
+                            <img src="${admin.avatar || 'images/default-avatar.png'}" alt="${admin.name}" class="user-avatar">
+                        </td>
+                        <td>${admin.name}</td>
+                        <td>${admin.email}</td>
+                        <td>
+                            <span class="user-role ${admin.role === 'superadmin' ? 'role-superadmin' : 'role-admin'}">
+                                ${admin.role === 'superadmin' ? 'Super Admin' : 'Admin'}
+                            </span>
+                        </td>
+                        <td>${lastActive}</td>
+                        <td>
+                            <button class="action-btn" data-id="${admin._id}">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                            <button class="action-btn delete-btn" data-id="${admin._id}">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </button>
+                        </td>
+                    `;
+
+                    adminsList.appendChild(row);
+                });
+
+                // Add event listeners to action buttons
+                document.querySelectorAll('.action-btn:not(.delete-btn)').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const adminId = this.getAttribute('data-id');
+                        viewAdminProfile(adminId);
+                    });
+                });
+
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const adminId = this.getAttribute('data-id');
+                        if (confirm('Are you sure you want to delete this admin?')) {
+                            deleteAdmin(adminId);
+                        }
+                    });
+                });
+            }
+
+            async function viewAdminProfile(adminId) {
+                try {
+                    const response = await fetch(`http://localhost:3000/api/admin/${adminId}`);
+                    const result = await response.json();
+
+                    if (result.success) {
+                        // Here you could open a modal with the admin details
+                        alert(`Viewing profile of: ${result.admin.name}\nEmail: ${result.admin.email}\nRole: ${result.admin.role}`);
+                    } else {
+                        alert(result.message || 'Failed to load admin profile');
+                    }
+                } catch (error) {
+                    console.error('Error viewing admin profile:', error);
+                    alert('Failed to load admin profile');
+                }
+            }
+
+            async function deleteAdmin(adminId) {
+                try {
+                    const response = await fetch(`http://localhost:3000/api/admin/${adminId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            deletedBy: sessionStorage.getItem('adminEmail')
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        loadAdmins();
+                        loadUserStats();
+                    } else {
+                        alert(result.message || 'Failed to delete admin');
+                    }
+                } catch (error) {
+                    console.error('Error deleting admin:', error);
+                    alert('Failed to delete admin');
+                }
+            }
+
+            // Logout functionality
+            document.getElementById('logout-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                sessionStorage.removeItem('adminLoggedIn');
+                sessionStorage.removeItem('adminEmail');
+                sessionStorage.removeItem('adminName');
+                window.location.href = 'admin-login.html';
+            });
+
+            // Profile dropdown toggle
+            const profileContainer = document.querySelector('.admin-profile-container');
+            const profileDropdown = document.querySelector('.admin-profile-dropdown');
+            
+            profileContainer.addEventListener('click', function(e) {
+                if (e.target.classList.contains('admin-profile-img') || 
+                    e.target.id === 'admin-name') {
+                    profileDropdown.style.display = 
+                        profileDropdown.style.display === 'block' ? 'none' : 'block';
+                }
+            });
+            
+            // Close dropdown when clicking elsewhere
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.admin-profile-container')) {
+                    profileDropdown.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

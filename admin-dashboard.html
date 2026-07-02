@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Dream Foundation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="images/logo.png">
+    <style>
+        :root {
+            --primary-blue: #1a73e8;
+            --light-blue: #e8f0fe;
+            --white: #ffffff;
+            --dark-text: #202124;
+            --gray-border: #dadce0;
+        }
+        
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Navigation - Updated for bottom profile */
+        .admin-nav {
+            width: 250px;
+            background: var(--primary-blue);
+            color: var(--white);
+            padding: 20px 0;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .admin-nav-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .admin-nav-links {
+            padding: 20px 0;
+            flex-grow: 1;
+        }
+        
+        .admin-nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: var(--white);
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        
+        .admin-nav-link:hover, .admin-nav-link.active {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .admin-nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Admin Profile at Bottom - New Styles */
+        .admin-profile-section {
+            padding: 20px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            margin-top: auto; /* Pushes to bottom */
+        }
+        
+        .admin-profile-container {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        .admin-profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid var(--white);
+            margin-right: 10px;
+        }
+        
+          .admin-profile-dropdown {
+            position: absolute;
+            bottom: 50px;
+            left: 0;
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            width: 200px;
+            overflow: hidden;
+            display: none;
+            z-index: 100;
+        }
+        
+        
+        .profile-dropdown-link {
+            display: block;
+            padding: 12px 20px;
+            color: var(--dark-text);
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        
+        .profile-dropdown-link:hover {
+            background: var(--light-blue);
+        }
+        
+        /* Main Content - Updated */
+        .admin-main {
+            flex: 1;
+            background: var(--light-blue);
+            padding: 20px;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: flex-end; /* Removed profile from header */
+            align-items: center;
+            padding: 10px 20px;
+            background: var(--white);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-top: 10px;
+        }
+
+        .admin-header h2 {
+    margin: 0; /* Remove any default margins */
+    padding: 0; /* Remove any default padding */
+    display: block; /* Ensure it's displayed */
+}
+   
+        /* Rest of your existing styles remain unchanged */
+        .dashboard-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+            margin-top: 100px;
+        }
+        
+        .dashboard-card {
+            flex: 1;
+            min-width: 250px;
+            background: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-title {
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .card-value {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .card-action {
+            display: inline-block;
+            padding: 8px 15px;
+            background: var(--primary-blue);
+            color: var(--white);
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        /* Page-specific styles */
+        .page-section {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .section-title {
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--gray-border);
+        }
+        
+        /* Data Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-border);
+        }
+        
+        .data-table th {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+        }
+        
+        .table-action {
+            color: var(--primary-blue);
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        
+        /* Forms */
+        .admin-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--dark-text);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--gray-border);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-submit {
+            background: var(--primary-blue);
+            color: var(--white);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+<div class="admin-container">
+        <!-- Navigation - Updated with profile at bottom -->
+        <nav class="admin-nav">
+            <div class="admin-nav-header">
+                <h2>Admin Panel</h2>
+            </div>
+            
+            <div class="admin-nav-links">
+                <a href="admin-dashboard.html" class="admin-nav-link active" data-page="home">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a href="events.html" class="admin-nav-link" data-page="events">
+                    <i class="fas fa-calendar-alt"></i> Events
+                </a>
+                <a href="donations.html" class="admin-nav-link" data-page="donations">
+                    <i class="fas fa-donate"></i> Donations
+                </a>
+                <a href="users.html" class="admin-nav-link" data-page="users">
+                    <i class="fas fa-users"></i> Users
+                </a>
+            </div>
+            
+            <!-- Moved Profile Section to Bottom -->
+            <div class="admin-profile-section">
+                <div class="admin-profile-container">
+                    <img src="images/admin-avatar.png" alt="Admin" class="admin-profile-img">
+                    <span id="admin-name">Admin Name</span>
+                    <div class="admin-profile-dropdown">
+                        <a href="profile.html" class="profile-dropdown-link">
+                            <i class="fas fa-user"></i> Profile
+                        </a>
+                        <a href="#" id="logout-btn" class="profile-dropdown-link">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content - Removed profile from header -->
+        <main class="admin-main">
+            <header class="admin-header">
+                <h2 id="page-title">Dashboard Overview</h2>
+            </header>
+
+            <!-- Home Page -->
+            <div id="home-page" class="page-content">
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <h3 class="card-title">Events</h3>
+                        <div class="card-value" id="events-count">0</div>
+                        <p>Upcoming and past workshops</p>
+                        <a href="events.html" class="card-action" data-page="events">Manage Events</a>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3 class="card-title">Donations</h3>
+                        <div class="card-value" id="donations-count">0</div>
+                        <p>Recent contributions</p>
+                        <a href="donations.html" class="card-action" data-page="donations">View Donations</a>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3 class="card-title">Users</h3>
+                        <div class="card-value" id="users-count">0</div>
+                        <p>Registered users</p>
+                        <a href="users.html" class="card-action" data-page="users">Manage Users</a>
+                    </div>
+                </div>
+
+                <div class="page-section">
+                    <h3 class="section-title">Quick Actions</h3>
+                    <div class="quick-actions">
+                        <button class="form-submit" id="add-event-btn">
+                            <i class="fas fa-plus"></i> Add New Event
+                        </button>
+                        <button class="form-submit" id="view-subscribers-btn">
+                            <i class="fas fa-envelope"></i> View Newsletter Subscribers
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            
+
+           
+
+            
+        </main>
+    </div>
+
+
+    <script>
+        // Load admin data from session
+        document.addEventListener('DOMContentLoaded', function() {
+            const adminName = sessionStorage.getItem('adminName') || 'Admin';
+            const adminEmail = sessionStorage.getItem('adminEmail') || 'admin@example.com';
+            
+            document.getElementById('admin-name').textContent = adminName;
+           
+            });
+            
+            // Logout functionality
+            document.getElementById('logout-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                sessionStorage.removeItem('adminLoggedIn');
+                sessionStorage.removeItem('adminEmail');
+                sessionStorage.removeItem('adminName');
+                window.location.href = 'index.html';
+            });
+            
+           
+
+            // New click handler for profile picture
+            const profileContainer = document.querySelector('.admin-profile-container');
+            const profileDropdown = document.querySelector('.admin-profile-dropdown');
+            
+            profileContainer.addEventListener('click', function(e) {
+                // Only toggle if clicking the image or name
+                if (e.target.classList.contains('admin-profile-img') || 
+                    e.target.id === 'admin-name') {
+                    profileDropdown.style.display = 
+                        profileDropdown.style.display === 'block' ? 'none' : 'block';
+                }
+            });
+            
+            // Close dropdown when clicking elsewhere
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.admin-profile-container')) {
+                    profileDropdown.style.display = 'none';
+                }
+            });
+
+        
+      
+    </script>
+</body>
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donate - Dream Foundation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="images/logo.png">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <img src="images/logo.png" alt="Dream Foundation Logo">
+                <h1>Dream Foundation</h1>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <nav>
+                <ul id="navMenu">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="about.html"><i class="fas fa-info-circle"></i> About Us</a></li>
+                    <li><a href="activities.html"><i class="fas fa-tasks"></i> Activities</a></li>
+                    <li><a href="donate.html" class="active"><i class="fas fa-hand-holding-heart"></i> Donate</a></li>
+                    <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Donation Hero -->
+    <section class="hero donation-hero">
+        <div class="container">
+            <h1>Support Our Youth</h1>
+            <p>Your donation helps provide counseling, career support, and skills development programs to empower young people</p>
+        </div>
+    </section>
+
+    <!-- Impact Section -->
+    <section class="section impact-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Your Impact</h2>
+                <p class="section-subtitle">See how your donation makes a difference</p>
+            </div>
+            
+            <div class="impact-grid">
+                <div class="impact-card">
+                    <div class="impact-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="impact-amount">$25</div>
+                    <h3>Counseling Session</h3>
+                    <p>Provides one hour of professional counseling for a young person in need</p>
+                </div>
+                
+                <div class="impact-card">
+                    <div class="impact-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="impact-amount">$50</div>
+                    <h3>Workshop Materials</h3>
+                    <p>Covers supplies for 5 youth to participate in our career workshops</p>
+                </div>
+                
+                <div class="impact-card">
+                    <div class="impact-icon">
+                        <i class="fas fa-laptop"></i>
+                    </div>
+                    <div class="impact-amount">$100</div>
+                    <h3>Tech Access</h3>
+                    <p>Provides a month of computer lab access for skills development</p>
+                </div>
+                
+                <div class="impact-card">
+                    <div class="impact-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <div class="impact-amount">$250</div>
+                    <h3>Scholarship</h3>
+                    <p>Supports one youth in our intensive career preparation program</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Donation Options Section -->
+    <section class="section donation-options-section">
+        <div class="container">
+            <div class="donation-options">
+                <div class="donation-form">
+                    <h2>Make a Donation</h2>
+                    
+                    <div class="donation-amounts">
+                        <h3>Select Amount</h3>
+                        <div class="amount-grid">
+                            <button class="amount-btn" data-amount="25">$25</button>
+                            <button class="amount-btn" data-amount="50">$50</button>
+                            <button class="amount-btn" data-amount="100">$100</button>
+                            <button class="amount-btn" data-amount="250">$250</button>
+                            <button class="amount-btn" data-amount="500">$500</button>
+                            <button class="amount-btn other-amount">Other</button>
+                        </div>
+                        
+                        <div class="custom-amount" id="customAmount">
+                            <label for="amount">Enter Custom Amount</label>
+                            <div class="input-group">
+                                <span>$</span>
+                                <input type="number" id="amount" name="amount" min="1" step="1">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="donation-frequency">
+                        <h3>Frequency</h3>
+                        <div class="frequency-options">
+                            <label class="frequency-option">
+                                <input type="radio" name="frequency" value="one-time" checked>
+                                <span>One-time</span>
+                            </label>
+                            <label class="frequency-option">
+                                <input type="radio" name="frequency" value="monthly">
+                                <span>Monthly</span>
+                            </label>
+                            <label class="frequency-option">
+                                <input type="radio" name="frequency" value="quarterly">
+                                <span>Quarterly</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn donate-btn">Donate Now</button>
+                </div>
+                
+                <div class="donation-info">
+                    <h2>Other Ways to Give</h2>
+                    
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h3>Mail a Check</h3>
+                        <p>Make checks payable to:<br>
+                        <strong>Dream Foundation</strong><br>
+                        123 Dream Street<br>
+                        Hope City, HC 12345</p>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-bullhorn"></i>
+                        </div>
+                        <h3>Fundraise</h3>
+                        <p>Create a personal fundraising page to support our programs through your network</p>
+                        <a href="#" class="btn btn-outline">Learn More</a>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <h3>Corporate Giving</h3>
+                        <p>Explore matching gifts, sponsorships, and other corporate partnership opportunities</p>
+                        <a href="contact.html" class="btn btn-outline">Contact Us</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Donor Recognition Section -->
+    <section class="section donor-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Our Donor Community</h2>
+                <p class="section-subtitle">Join hundreds of supporters who believe in our mission</p>
+            </div>
+            
+            <div class="donor-levels">
+                <div class="donor-level">
+                    <h3>Dream Builder</h3>
+                    <div class="level-amount">$1,000+</div>
+                    <ul>
+                        <li>Annual recognition in our report</li>
+                        <li>Invitation to exclusive events</li>
+                        <li>Personalized impact report</li>
+                    </ul>
+                </div>
+                
+                <div class="donor-level">
+                    <h3>Hope Champion</h3>
+                    <div class="level-amount">$500+</div>
+                    <ul>
+                        <li>Semi-annual updates</li>
+                        <li>Invitation to annual gala</li>
+                        <li>Special thank you package</li>
+                    </ul>
+                </div>
+                
+                <div class="donor-level">
+                    <h3>Youth Ally</h3>
+                    <div class="level-amount">$100+</div>
+                    <ul>
+                        <li>Quarterly newsletter</li>
+                        <li>Social media shoutout</li>
+                        <li>Digital thank you</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Dream Foundation</h3>
+                    <p>Empowering youth to achieve their dreams through counseling, career support, and skills development.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="activities.html">Programs</a></li>
+                        <li><a href="donate.html">Donate</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact Info</h3>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Dream Street, Hope City</li>
+                        <li><i class="fas fa-phone"></i> (123) 456-7890</li>
+                        <li><i class="fas fa-envelope"></i> info@dreamfoundation.org</li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Newsletter</h3>
+                    <p>Subscribe to our newsletter to stay updated on our programs and events.</p>
+                    <form id="newsletterForm">
+                        <input type="email" placeholder="Your Email" required>
+                        <button type="submit" class="btn">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2023 Dream Foundation. All Rights Reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navMenu = document.getElementById('navMenu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            navMenu.classList.toggle('show');
+        });
+        
+        // Newsletter Form Submission
+        const newsletterForm = document.getElementById('newsletterForm');
+        
+        newsletterForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = newsletterForm.querySelector('input[type="email"]').value;
+            alert(`Thank you for subscribing with ${email}! We'll keep you updated.`);
+            newsletterForm.reset();
+        });
+        
+        // Donation Amount Selection
+        const amountBtns = document.querySelectorAll('.amount-btn');
+        const customAmount = document.getElementById('customAmount');
+        const amountInput = document.getElementById('amount');
+        
+        amountBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons
+                amountBtns.forEach(b => b.classList.remove('active'));
+                
+                // Add active class to clicked button
+                btn.classList.add('active');
+                
+                // If "Other" was clicked, show custom amount field
+                if (btn.classList.contains('other-amount')) {
+                    customAmount.style.display = 'block';
+                    amountInput.focus();
+                } else {
+                    customAmount.style.display = 'none';
+                    amountInput.value = btn.getAttribute('data-amount');
+                }
+            });
+        });
+        
+        // Initialize with first amount selected
+        amountBtns[0].classList.add('active');
+    </script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | Dream Foundation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="images/logo.png">
+    <style>
+        .debug-console {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #222;
+            color: #fff;
+            padding: 10px;
+            font-family: monospace;
+            max-height: 150px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1000;
+        }
+        .debug-toggle {
+            position: fixed;
+            bottom: 160px;
+            right: 20px;
+            background: #333;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+        .error-message {
+            color: #ff4444;
+            font-size: 0.8em;
+            margin-top: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <section class="admin-login-section">
+        <div class="container">
+            <div class="login-container">
+                <div class="login-header">
+                    <i class="fas fa-user-shield"></i>
+                    <h2>Admin Portal</h2>
+                </div>
+                
+                <form class="login-form" id="adminLoginForm">
+                    <div class="form-group">
+                        <label for="admin-email">Email Address</label>
+                        <input type="email" id="admin-email" name="email" required>
+                        <div class="error-message" id="email-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="admin-password">Password</label>
+                        <input type="password" id="admin-password" name="password" required>
+                        <div class="error-message" id="password-error"></div>
+                    </div>
+                    
+                    <button type="submit" class="login-btn">Sign In</button>
+                </form>
+                
+                <div class="login-footer">
+                    <p>Restricted access. Unauthorized entry prohibited.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <button class="debug-toggle" onclick="toggleDebug()">Toggle Debug</button>
+    <div class="debug-console" id="debugConsole"></div>
+
+    <!-- admin-login.html -->
+<script>
+const debugConsole = document.getElementById('debugConsole');
+
+function logDebug(message) {
+    const entry = document.createElement('div');
+    entry.textContent = `[DEBUG] ${new Date().toLocaleTimeString()}: ${message}`;
+    debugConsole.appendChild(entry);
+    debugConsole.scrollTop = debugConsole.scrollHeight;
+}
+
+function toggleDebug() {
+    debugConsole.style.display = debugConsole.style.display === 'none' ? 'block' : 'none';
+}
+
+document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const email = document.getElementById('admin-email').value;
+    const password = document.getElementById('admin-password').value;
+    const emailError = document.getElementById('email-error');
+    const passwordError = document.getElementById('password-error');
+    const loginBtn = e.target.querySelector('button[type="submit"]');
+    
+    emailError.style.display = 'none';
+    passwordError.style.display = 'none';
+    
+    let isValid = true;
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        emailError.textContent = 'Please enter a valid email address';
+        emailError.style.display = 'block';
+        isValid = false;
+    }
+    if (!password || password.length < 8) {
+        passwordError.textContent = 'Password must be at least 8 characters';
+        passwordError.style.display = 'block';
+        isValid = false;
+    }
+    if (!isValid) return;
+    
+    loginBtn.disabled = true;
+    loginBtn.textContent = 'Authenticating...';
+    logDebug(`Attempting login with email: ${email}`);
+    
+    try {
+        const apiUrl = 'http://127.0.0.1:3000/api/admin/login';
+        logDebug(`Sending request to: ${apiUrl}`);
+        
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+            credentials: 'include'
+        });
+
+        logDebug(`Received response status: ${response.status}`);
+        const responseText = await response.text();
+        logDebug(`Raw response: ${responseText}`);
+        
+        let data;
+        try {
+            data = responseText ? JSON.parse(responseText) : {};
+        } catch (parseError) {
+            logDebug(`JSON parse error: ${parseError}`);
+            throw new Error('Invalid server response format');
+        }
+
+        if (!response.ok) {
+            logDebug(`Server error: ${data.message || 'No error message'}`);
+            throw new Error(data.message || `Server responded with status ${response.status}`);
+        }
+
+        if (data.success) {
+    logDebug('Login successful, redirecting...');
+    sessionStorage.setItem('adminLoggedIn', 'true');
+    sessionStorage.setItem('adminEmail', data.user?.email || '');
+    sessionStorage.setItem('adminId', data.user?._id || ''); // Store the admin ID
+    sessionStorage.setItem('adminName', data.user?.name || 'Admin');
+    window.location.href = 'admin-dashboard.html';
+
+        } else {
+            throw new Error(data.message || 'Invalid credentials');
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        logDebug(`Error: ${error.message}`);
+
+        let userMessage = error.message;
+        if (error.message.includes('Failed to fetch')) {
+            userMessage = 'Cannot connect to server. Please:\n1. Ensure the backend server is running\n2. Check your network connection';
+        }
+
+        passwordError.textContent = userMessage;
+        passwordError.style.display = 'block';
+    } finally {
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'Sign In';
+    }
+});
+
+logDebug('Admin login page initialized');
+</script>
+
+</body>
+</html>
